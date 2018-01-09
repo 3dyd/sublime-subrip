@@ -1,0 +1,14 @@
+[
+    {
+        "caption": "SubRip: Recount",
+        "command": "subrip_recount",
+    },
+    {
+        "caption": "SubRip: Remove Cue",
+        "command": "subrip_remove_cue",
+    },
+    {
+        "caption": "SubRip: Shift",
+        "command": "subrip_shift",
+    }
+]
