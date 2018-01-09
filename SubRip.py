@@ -5,11 +5,12 @@ import sublime_plugin
 pattern = re.compile("^(?:(\d+:)?(\d+:))?(\d+)?(,\d+)?$")
 
 
-def expand(view, pos, selector):
-    if not view.match_selector(pos, selector):
-        raise ValueError("pos %d does not match selector %s" % (pos, selector))
+def expand(view, point, selector):
+    if not view.match_selector(point, selector):
+        raise ValueError(
+            "point %d does not match selector %s" % (point, selector))
 
-    region = sublime.Region(pos, pos + 1)
+    region = sublime.Region(point, point + 1)
     while region.a >= 0 and view.match_selector(region.a - 1, selector):
         region.a -= 1
     while view.match_selector(region.b, selector):
@@ -42,14 +43,14 @@ def ms_to_ts(ms):
 
 
 def run_for_selector(view, region, selector, callback, *args):
-    pos = region.begin()
-    while pos <= region.end():
-        if view.match_selector(pos, selector):
-            target = expand(view, pos, selector)
+    point = region.begin()
+    while point <= region.end():
+        if view.match_selector(point, selector):
+            target = expand(view, point, selector)
             callback(target, *args)
-            pos = target.b
+            point = target.b
         else:
-            pos += 1
+            point += 1
 
 
 def ts_to_ms(ts):
@@ -90,6 +91,24 @@ class SubripApplyShift(sublime_plugin.TextCommand):
         ms += offset
         timestamp = ms_to_ts(ms)
         self.view.replace(edit, region, str(timestamp))
+
+
+class SubripGenerateCounter(sublime_plugin.TextCommand):
+    def run(self, edit):
+        if len(self.view.sel()) != 1 or not self.view.sel()[0].empty():
+            return
+
+        point = self.view.sel()[0].a - 1
+        selector = "meta.counter.subrip"
+        while point >= 0 and not self.view.match_selector(point, selector):
+            point -= 1
+        if point < 0:
+            return
+
+        region = expand(self.view, point, selector)
+        counter = int(self.view.substr(region)) + 1
+        insertion = "\n" + str(counter)
+        self.view.insert(edit, self.view.sel()[0].a, insertion)
 
 
 class SubripRecount(sublime_plugin.TextCommand):

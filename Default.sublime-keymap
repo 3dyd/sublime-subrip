@@ -1,0 +1,13 @@
+[
+    {
+        "keys": ["enter"],
+        "command": "subrip_generate_counter",
+        "context": [
+            {
+                "key": "selector",
+                "operator": "equal",
+                "operand": "text.subrip - meta"
+            }
+        ]
+    }
+]
