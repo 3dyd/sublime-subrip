@@ -116,18 +116,14 @@ class SubripAutoCue(sublime_plugin.TextCommand):
             self.view.insert(edit, point, "\n")
             return
 
-        counter = find_backward(point, self.view, "meta.counter.subrip")
-        if not counter:
-            counter = 0
-
         ts = find_backward(point, self.view, "meta.timestamp.subrip")
         if not ts:
             ts = "00:00:00,000"
 
         snippet = \
-            "\n{0}\n${{1:{1}}}:${{2:{2}}}:${{3:{3}}},${{4:{4}}}" \
-            " --> ${{5:{1}}}:${{6:{2}}}:${{7:{3}}},${{8:{4}}}\n" \
-            .format(int(counter) + 1, ts[0:2], ts[3:5], ts[6:8], ts[9:12])
+            "\n0\n${{1:{0}}}:${{2:{1}}}:${{3:{2}}},${{4:{3}}}" \
+            " --> ${{5:{0}}}:${{6:{1}}}:${{7:{2}}},${{8:{3}}}\n" \
+            .format(ts[0:2], ts[3:5], ts[6:8], ts[9:12])
 
         self.view.run_command('insert_snippet', {"contents": snippet})
         self.view.run_command('subrip_recount')
