@@ -1,7 +1,7 @@
 [
     {
         "keys": ["enter"],
-        "command": "subrip_generate_counter",
+        "command": "subrip_auto_cue",
         "context": [
             {
                 "key": "selector",
