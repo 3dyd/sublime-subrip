@@ -110,12 +110,17 @@ class SubripAutoCue(sublime_plugin.TextCommand):
         if len(self.view.sel()) != 1 or not self.view.sel()[0].empty():
             return
 
-        start = self.view.sel()[0].a - 1
-        counter = find_backward(start, self.view, "meta.counter.subrip")
+        point = self.view.sel()[0].a
+        settings = sublime.load_settings("SubRip.sublime-settings")
+        if not settings.get("auto_cue"):
+            self.view.insert(edit, point, "\n")
+            return
+
+        counter = find_backward(point, self.view, "meta.counter.subrip")
         if not counter:
             counter = 0
 
-        ts = find_backward(start, self.view, "meta.timestamp.subrip")
+        ts = find_backward(point, self.view, "meta.timestamp.subrip")
         if not ts:
             ts = "00:00:00,000"
 

@@ -1,0 +1,5 @@
+{
+	// Enables/disables insertion of cue snippet and performing recount after
+	// pressing Enter in empty line.
+	"auto_cue": true
+}
