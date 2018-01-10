@@ -142,7 +142,11 @@ class SubripRecount(sublime_plugin.TextCommand):
 
 class SubripRemoveCue(sublime_plugin.TextCommand):
     def remove(self, region, edit):
+        # remove also empty line after cue
+        region.b += 1
         self.view.erase(edit, region)
+
+        self.view.run_command('subrip_recount')
 
     def run(self, edit):
         if has_sel(self.view, True):
