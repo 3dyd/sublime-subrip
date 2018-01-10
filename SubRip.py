@@ -133,10 +133,11 @@ class SubripRecount(sublime_plugin.TextCommand):
     def run(self, edit):
         selector = "meta.counter.subrip"
         regions = self.view.find_by_selector(selector)
-        counter = 1
-        for region in regions:
+        counter = len(regions)
+        # loop backward not to deal with the cases when region length changes
+        for region in reversed(regions):
             self.view.replace(edit, region, str(counter))
-            counter += 1
+            counter -= 1
 
 
 class SubripRemoveCue(sublime_plugin.TextCommand):
