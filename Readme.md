@@ -1,6 +1,6 @@
 # SubRip plugin for Sublime Text 3
 
-SubRip (*.srt) format extensions:
+SubRip (`*.srt`) format extensions:
 - syntax highlighter
 - few commands
 - auto cue
@@ -38,6 +38,6 @@ Remove cue(s) under cursor(s) or in selection(s). Performs recount after removal
 
 ## Auto Cue
 
-Inserts cue snippet when you press Enter on empty line. Snippet has correct counter and timestamps of previous cue. You can walk through timestamps parts using Tab key.
+Inserts cue snippet when you press `Enter` on empty line. Snippet has correct counter and timestamps of previous cue. You can walk through timestamps parts using `Tab` key.
 
 It can be disabled by setting `auto_cue` parameter to `false`. Parameter can be edited using menu `Preferences -> Package Settings -> SubRip -> Settings — User`.
