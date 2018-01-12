@@ -2,7 +2,7 @@ import re
 import sublime
 import sublime_plugin
 
-pattern = re.compile("^(?:(\d+:)?(\d+:))?(\d+)?(,\d+)?$")
+ts_pattern = re.compile("^\s*(?:(\d*:)?(\d*:))?(\d*)(,\d*)?\s*$")
 
 
 def expand(view, point, selector):
@@ -66,19 +66,19 @@ def run_for_selector(view, region, selector, callback, *args):
 
 
 def ts_to_ms(ts):
-    match = pattern.match(ts)
+    match = ts_pattern.match(ts)
     if not match:
         sublime.status_message("unexpected timestamp format")
         return
 
     ms = 0
-    if match.group(1):
+    if match.group(1) and len(match.group(1)) > 1:
         ms += int(match.group(1)[:-1]) * 3600 * 1000
-    if match.group(2):
+    if match.group(2) and len(match.group(2)) > 1:
         ms += int(match.group(2)[:-1]) * 60 * 1000
     if match.group(3):
         ms += int(match.group(3)) * 1000
-    if match.group(4):
+    if match.group(4) and len(match.group(4)) > 1:
         ms += int(match.group(4)[1:])
 
     return ms
