@@ -42,6 +42,8 @@ def has_sel(view, empty_means_yes):
 
 
 def ms_to_ts(ms):
+    if ms < 0:
+        ms = 0
     h = (ms / 1000 / 60 / 60)
     if h > 99 or h < -99:
         raise ValueError("too big shift: %d msec" % ms)
@@ -163,7 +165,10 @@ class SubripRemoveCue(sublime_plugin.TextCommand):
 
 class SubripShift(sublime_plugin.WindowCommand):
     def on_done(self, text):
-        offset = ts_to_ms(text)
+        if text[:1] == "-":
+            offset = - ts_to_ms(text[1:])
+        else:
+            offset = ts_to_ms(text)
         if offset:
             view = self.window.active_view()
             view.run_command('subrip_apply_shift', {'offset': offset})

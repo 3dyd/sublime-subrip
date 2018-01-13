@@ -13,7 +13,7 @@ Commands are prefixed with `SubRip:` in Command Palette.
 
 Shift timestamps of selected or all cues.
 
-Timestamp format is the same as the one used in SubRip. All timestamp parts are optional.
+Timestamp format is the same as the one used in SubRip. All timestamp parts are optional. Timestamp can be negative.
 
 Examples:
 
@@ -27,6 +27,7 @@ Rule | Time Interval
 `3,400` | 3400 msec
 `2:` | 2 minutes
 `2::` | 2 hours
+`-3` | back by 3 seconds
 
 ### Recount
 
