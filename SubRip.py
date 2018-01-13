@@ -175,3 +175,19 @@ class SubripShift(sublime_plugin.WindowCommand):
 
     def run(self):
         self.window.show_input_panel("Shift by", "", self.on_done, None, None)
+
+
+class SubripToggleStrict(sublime_plugin.TextCommand):
+    def run(self, edit):
+        formal = "Packages/SubRip/SubRip.sublime-syntax"
+        strict = "Packages/SubRip/SubRipStrict.sublime-syntax"
+        current = self.view.settings().get('syntax')
+
+        if current == formal:
+            self.view.set_syntax_file(strict)
+            sublime.status_message("switched to strict syntax")
+        elif current == strict:
+            self.view.set_syntax_file(formal)
+            sublime.status_message("switched to formal syntax")
+        else:
+            sublime.status_message("current syntax is not SubRip: " + current)

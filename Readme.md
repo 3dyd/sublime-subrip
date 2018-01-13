@@ -1,7 +1,7 @@
 # SubRip plugin for Sublime Text 3
 
 SubRip (`*.srt`) format extensions:
-- syntax highlighter
+- syntax definitions
 - few commands
 - auto cue
 
@@ -36,6 +36,12 @@ Renumber all cue counters in the file.
 ### Remove Cue
 
 Remove cue(s) under cursor(s) or in selection(s). Performs recount after removal.
+
+### Toggle Strict Syntax
+
+Toggles the use of strict syntax in current view. By default it is turned off.
+
+When it is on, lines, containing syntax errors, are highlighted using `illegal.invalid` scope. In color themes this scope usually has well-noticeable eye-catching colors (like red background). This is quite annoying when writing new subtitles, but could be quite useful when editing or fixing existing ones.
 
 ## Auto Cue
 

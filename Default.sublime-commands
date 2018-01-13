@@ -10,5 +10,9 @@
     {
         "caption": "SubRip: Shift",
         "command": "subrip_shift",
+    },
+    {
+        "caption": "SubRip: Toggle Strict Syntax",
+        "command": "subrip_toggle_strict",
     }
 ]
