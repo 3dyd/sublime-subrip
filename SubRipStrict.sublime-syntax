@@ -1,0 +1,189 @@
+%YAML 1.2
+---
+name: SubRip (Strict)
+hidden: true
+file_extensions:
+  - srt
+scope: text.subrip.strict
+variables:
+  t: '[0-5]\d'
+  ts: (\d{2})(:)({{t}})(:)({{t}})(,)(\d{3})
+  partial_ts: (\d{2})?(:)?({{t}})?(:)?({{t}})?(,)?(\d{3})?
+
+contexts:
+  counter:
+    - match: ^(\d+)(?:\n|(.+$\n))
+      captures:
+        1: meta.counter.subrip keyword.subrip
+        2: invalid.illegal.subrip
+      set: interval
+
+  cue:
+    - match: (?=\d)
+      set: [cue-meta, counter]
+
+  cue-meta:
+    - meta_scope: meta.cue.subrip
+    - match: ''
+      pop: true
+
+  error-at-eol:
+    - match: (?=\n)
+      set: invalid
+
+  inside-string:
+    - match: \1
+      scope: punctuation.definition.string.end.subrip
+      pop: true
+    - include: error-at-eol
+
+  interval:
+    - match: ''
+      set: [interval-base, timestamp-2nd, interval-sep, timestamp-1st]
+
+  interval-base:
+    - meta_scope: meta.interval.subrip
+    - include: pop-after-eol
+    - match: \n|(.*\n)
+      captures:
+        1: invalid.illegal.subrip
+      set: text
+
+  interval-sep:
+    - include: pop-after-eol
+    - match: ' (-->) '
+      captures:
+        1: punctuation.terminator.subrip
+      pop: true
+    - include: invalid
+
+  invalid:
+    - match: .*\n
+      scope: invalid.illegal.subrip
+      pop: true
+
+  main:
+    - match: ^\n
+    - include: cue
+    - include: invalid
+
+  pop-after-eol:
+    - match: (?<=\n)
+      pop: true
+
+  text:
+    - meta_content_scope: meta.text.subrip
+    - match: (?=^\n)
+      pop: true
+    - match: \\[Nnh]
+      scope: constant.character.escape.subrip
+    - match: (({)(\\(?>an|(a))\d)(}))
+      captures:
+        1: meta.up.subrip
+        2: punctuation.definition.up.begin.subrip
+        3: keyword.operator.up.subrip
+        4: invalid.deprecated.subrip
+        5: punctuation.definition.up.end.subrip
+    - include: text-tags
+
+  text-font-attrib:
+    - match: |-
+        (?xi:
+          (
+            face | family | size | alpha |
+            (?:back-)?color |
+            (?:outline|shadow)-(?:color|level)
+          )
+          (=)
+          [ \t]*+
+          (?!>)
+        )
+      captures:
+        1: entity.other.attribute-name.subrip
+        2: punctuation.separator.key-value.subrip
+      push:
+        - match: (\")
+          scope: punctuation.definition.string.begin.subrip
+          set:
+            - meta_scope: string.quoted.double.subrip
+            - include: inside-string
+        - match: (\')
+          scope: punctuation.definition.string.begin.subrip
+          set:
+            - meta_scope: string.quoted.single.subrip
+            - include: inside-string
+        - match: (?=\w)
+          set:
+            - meta_scope: string.unquoted.subrip
+            - match: (?=\W)
+              pop: true
+        - include: invalid
+
+  text-font-tag:
+    - match: (<)(?i:(font))[\t ]
+      captures:
+        1: punctuation.definition.tag.html.begin.subrip
+        2: entity.name.tag.subrip
+      push:
+        - meta_scope: meta.tag.subrip
+        - include: pop-after-eol
+        - match: '>'
+          scope: punctuation.definition.tag.html.end.subrip
+          pop: true
+        - include: text-font-attrib
+        - include: error-at-eol
+        - match: '[^\s]'
+          scope: invalid.illegal.subrip
+
+  text-tags:
+    - match: (?i)((</?)([a-z]+)(>)|({/?)([a-z]+)(}))
+      captures:
+        1: meta.tag.subrip
+        2: punctuation.definition.tag.html.begin.subrip
+        3: entity.name.tag.subrip
+        4: punctuation.definition.tag.html.end.subrip
+        5: punctuation.definition.tag.curly.begin.subrip
+        6: entity.name.tag.subrip
+        7: punctuation.definition.tag.curly.end.subrip
+    - include: text-font-tag
+
+  timestamp:
+    - match: '({{ts}})'
+      captures:
+        1: meta.timestamp.subrip
+        2: constant.numeric.subrip
+        3: punctuation.separator.subrip
+        4: constant.numeric.subrip
+        5: punctuation.separator.subrip
+        6: constant.numeric.subrip
+        7: punctuation.separator.subrip
+        8: constant.numeric.subrip
+      pop: true
+
+  timestamp-1st:
+    - include: timestamp
+    # no idea why it does not work without forcing \A
+    - match: '\A{{partial_ts}}'
+      captures:
+        1: constant.numeric.subrip
+        2: punctuation.separator.subrip
+        3: constant.numeric.subrip
+        4: punctuation.separator.subrip
+        5: constant.numeric.subrip
+        6: punctuation.separator.subrip
+        7: constant.numeric.subrip
+      set: invalid
+
+  timestamp-2nd:
+    - include: pop-after-eol
+    - include: timestamp
+    - match: '{{partial_ts}}'
+      captures:
+        1: constant.numeric.subrip
+        2: punctuation.separator.subrip
+        3: constant.numeric.subrip
+        4: punctuation.separator.subrip
+        5: constant.numeric.subrip
+        6: punctuation.separator.subrip
+        7: constant.numeric.subrip
+      set: invalid

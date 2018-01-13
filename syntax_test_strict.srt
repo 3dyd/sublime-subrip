@@ -1,0 +1,155 @@
+# SYNTAX TEST "SubRipStrictTest.sublime-syntax"
+1
+# <- meta.counter.subrip keyword.subrip
+00:00:00,000 --> 00:00:04,000
+
+2
+00:00:00,000 --> 00:00:04,000
+# <- meta.interval.subrip meta.timestamp.subrip
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.interval.subrip
+#^^^^^^^^^^^ meta.timestamp.subrip
+# ^ punctuation.separator.subrip
+#    ^ punctuation.separator.subrip
+#       ^ punctuation.separator.subrip
+#            ^^^  punctuation.terminator.subrip -meta.timestamp.subrip
+#                ^^^^^^^^^^^^ meta.timestamp.subrip
+#                  ^ punctuation.separator.subrip
+#                     ^ punctuation.separator.subrip
+#                        ^ punctuation.separator.subrip
+
+3
+# <- meta.cue.subrip
+00:00:00,000 --> 00:00:04,000
+# <- meta.cue.subrip
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.cue.subrip
+Sed ut
+#^^^^^ meta.cue.subrip
+
+# <- -meta.cue.subrip -invalid.illegal.subrip
+3
+00:00:00,000 --> 00:00:04,000
+
+
+# <- -meta.cue.subrip -invalid.illegal.subrip
+4
+00:00:15,001 --> 00:00:19,666
+Sed ut perspiciatis,
+# <- meta.text.subrip
+#^^^^^^^^^^^^^^^^^^^ meta.text.subrip
+
+4
+00:00:19,667 --> 00:01:21,700
+Nemo enim ipsam voluptatem,
+quia voluptas sit,
+aspernatur aut odit aut fugit
+# <- meta.text.subrip
+
+4
+00:01:27,900 --> 00:01:51,100
+neque <i>porro {i}quisquam{/i} est,</i>
+#     ^^^ meta.tag.subrip
+#              ^^^ meta.tag.subrip
+#                         ^^^^ meta.tag.subrip
+#                                  ^^^^ meta.tag.subrip
+qui <unkn>ratione {uknn}voluptatem</unkn> sequi{/uknn}
+#   ^^^^^^ meta.tag.subrip
+#                 ^^^^^^ meta.tag.subrip
+#                                 ^^^^^^^ meta.tag.subrip
+#                                              ^^^^^^^ meta.tag.subrip
+qui <b><U>ratione voluptatem sequi nesciunt,
+#   ^^^^^^ meta.tag.subrip
+
+5
+00:01:55,800 --> 00:02:25,200
+qui\nratione\h
+#  ^^ meta.text.subrip constant.character.escape.subrip
+#           ^^ meta.text.subrip constant.character.escape.subrip
+\n
+# <- meta.text.subrip constant.character.escape.subrip
+#^ meta.text.subrip constant.character.escape.subrip
+
+5i
+#^^ invalid.illegal.subrip
+00:00:00,000 --> 00:00:04,000
+
+6
+
+# <- meta.interval.subrip invalid.illegal.subrip
+
+666
+00:00:60,000 --> 00:00:04,000
+#    ^ -invalid.illegal.subrip
+#     ^ invalid.illegal.subrip
+
+6
+00:00:00,000 -> 00:00:04,000
+#          ^ -invalid.illegal.subrip
+#           ^ invalid.illegal.subrip
+
+6
+00:12:44,999 --> 11:11:10,00
+#                        ^ -invalid.illegal.subrip
+#                         ^ invalid.illegal.subrip
+
+6
+00:00:00,000 --> 00:00:04,000s
+#                            ^^ invalid.illegal.subrip
+
+quia dolor
+# <- invalid.illegal.subrip
+
+7
+00:01:55,800 --> 00:02:25,200
+sit {\an7}amet {\a1}consectetur 
+#   ^^^^^^ meta.up.subrip
+#   ^ punctuation.definition.up.begin.subrip
+#    ^^^^ keyword.operator.up.subrip
+#        ^ punctuation.definition.up.end.subrip
+#                ^ invalid.deprecated.subrip
+
+8
+00:01:55,800 --> 00:02:25,200
+neque <font size= "12" >quisquam</font>
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.text.subrip
+#     ^^^^^^^^^^^^^^^^^^ meta.tag.subrip
+#           ^^^^ entity.other.attribute-name.subrip
+#               ^ punctuation.separator.key-value.subrip
+#                 ^ punctuation.definition.string.begin.subrip
+#                  ^^ string.quoted.double.subrip
+#                    ^ punctuation.definition.string.end.subrip
+#                ^^^^ -invalid.illegal.subrip
+#                               ^^^^^^^ meta.tag.subrip
+neque <font size='12'>quisquam</font>
+#                ^ punctuation.definition.string.begin.subrip
+#                 ^^ string.quoted.single.subrip
+#                   ^ punctuation.definition.string.end.subrip
+neque <FONT color= ff0000>porro</font>
+#                 ^^^^^^^^ -invalid.illegal.subrip
+#                  ^^^^^^ string.unquoted.subrip
+#                        ^ punctuation.definition.tag.html.end.subrip
+neque <font size= "12" color=ff0000>porro</font>
+#                    ^^^^^^^^^ meta.tag.subrip -invalid.illegal.subrip
+<font size=> <font size= > <font size=!
+#     ^ invalid.illegal.subrip
+#                  ^ invalid.illegal.subrip
+#                                     ^ invalid.illegal.subrip
+<font size=
+#          ^ invalid.illegal.subrip
+<font size='
+#           ^ invalid.illegal.subrip
+<font size='a
+#            ^ invalid.illegal.subrip
+<font size='a'
+#             ^ invalid.illegal.subrip
+
+8
+00:01:55,800 --> 00:02:25,200
+neque<font 
+#         ^ -invalid.illegal.subrip
+#          ^ invalid.illegal.subrip
+
+8
+00:01:55,800 --> 00:02:25,200
+neque<font size=1"1"
+#               ^ -invalid.illegal.subrip
+#                ^ invalid.illegal.subrip

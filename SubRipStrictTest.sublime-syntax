@@ -1,0 +1,13 @@
+%YAML 1.2
+---
+name: SubRip (Strict) Test
+hidden: true
+scope: text.subrip.strict.test
+
+contexts:
+  main:
+    - match: ''
+      set: scope:text.subrip.strict
+      with_prototype:
+        - match: ^#.+\n
+          scope: comment.line.subrip
